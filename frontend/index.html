@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Pro - 创意影像中心</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<div class="glass-bg"></div> <div class="app-container">
+    <header class="main-header">
+        <div class="logo">AI<span>Image</span>Pro</div>
+        <div class="header-actions">
+            <button id="btnOpenCam" class="btn-icon"><i class="fas fa-camera"></i> 开启相机</button>
+            <button id="btnCloseCam" class="btn-icon btn-danger"><i class="fas fa-video-slash"></i> 关闭</button>
+            <label for="fileInput" class="custom-file-upload">
+                <i class="fas fa-folder-open"></i> 本地图片
+            </label>
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+        </div>
+    </header>
+
+    <main class="content-wrapper">
+        <div class="panel" id="leftBox">
+            <div class="panel-header">输入源</div>
+            <div class="viewport">
+                <div class="placeholder-text" id="leftPlaceholder">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>等待画面输入...</p>
+                </div>
+                <video id="videoPreview" autoplay playsinline style="display: none;"></video>
+                <img id="sourceImage" style="display: none;" alt="原图">
+                <canvas id="captureCanvas" width="400" height="400" style="display: none;"></canvas>
+            </div>
+            <div class="panel-footer">
+                <button id="btnTakePhoto" class="btn-primary full-width">立即拍照</button>
+            </div>
+        </div>
+
+        <div class="control-center">
+            <div class="input-group">
+                <textarea id="promptInput" placeholder="描述你想要生成的画面内容..."></textarea>
+                <button id="btnGenerate" class="btn-glow">
+                    <span>开始生成</span>
+                    <div class="shimmer"></div>
+                </button>
+            </div>
+        </div>
+
+        <div class="panel" id="rightBox">
+            <div class="panel-header">AI 生成结果</div>
+            <div class="viewport">
+                <div class="placeholder-text" id="rightPlaceholder">
+                    <i class="fas fa-magic"></i>
+                    <p>生成的影像将在此呈现</p>
+                </div>
+                <img id="generatedImage" style="display: none;" alt="生成图">
+                <div id="loadingOverlay" class="loading-spinner" style="display: none;">
+                    <div class="spinner"></div>
+                    <span>AI 正在构思中...</span>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button class="btn-outline full-width">保存到本地</button>
+            </div>
+        </div>
+    </main>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

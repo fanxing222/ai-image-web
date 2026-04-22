@@ -1,0 +1,241 @@
+/* 全局变量定义 */
+:root {
+    --primary-color: #6366f1;       /* 科技紫蓝 */
+    --accent-color: #8b5cf6;        /* 亮紫色 */
+    --bg-dark: #0f172a;             /* 深空蓝背景 */
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --text-main: #f8fafc;
+    --text-dim: #94a3b8;
+}
+
+/* 基础重置 */
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: var(--text-main);
+    background-color: var(--bg-dark);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    overflow: hidden; /* 保持大气感，禁止出现全局滚动条 */
+}
+
+/* 动态背景装饰层 */
+.glass-bg {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+    /* 路径留空：你可以放一张科技感纹理图 assets/bg-pattern.png */
+    /* background-image: url('assets/bg-pattern.png'); */
+    z-index: -1;
+}
+
+/* 主容器 */
+.app-container {
+    width: 95%;
+    max-width: 1300px;
+    height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+/* 顶部导航栏 */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    margin-bottom: 25px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.logo span { color: var(--primary-color); text-shadow: 0 0 10px rgba(99, 102, 241, 0.5); }
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+}
+
+/* 核心三栏布局 */
+.content-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 320px 1fr; /* 缩小中间，保持两边平衡 */
+    gap: 25px;
+    flex: 1;
+    align-items: start; /* 防止面板被拉伸至屏幕底部 */
+}
+
+/* 面板通用样式 */
+.panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 1px solid var(--glass-border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.panel:hover {
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+.panel-header {
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--glass-border);
+    background: rgba(255,255,255,0.02);
+}
+
+/* 图片/视频容器 - 调整高度的核心位置 */
+.viewport {
+    height: 380px; /* 已缩短：从原来的撑满改为固定高度 */
+    background: #000;
+    margin: 15px;
+    border-radius: 12px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+
+.viewport img, .viewport video {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* 确保图片完整显示 */
+}
+
+.placeholder-text {
+    text-align: center;
+    color: var(--text-dim);
+}
+
+.placeholder-text i {
+    font-size: 40px;
+    margin-bottom: 10px;
+    opacity: 0.5;
+}
+
+/* 中间控制区 */
+.control-center {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 40px;
+}
+
+.input-group textarea {
+    width: 100%;
+    height: 180px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    padding: 18px;
+    color: #fff;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: none;
+    outline: none;
+    box-sizing: border-box;
+    transition: 0.3s;
+}
+
+.input-group textarea:focus {
+    border-color: var(--primary-color);
+    background: rgba(0, 0, 0, 0.4);
+}
+
+/* 按钮样式 */
+button, .custom-file-upload {
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+}
+
+.btn-primary { background: var(--primary-color); color: white; }
+.btn-primary:hover { background: #4f46e5; transform: translateY(-2px); }
+
+.btn-danger { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
+.btn-danger:hover { background: #ef4444; color: white; }
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--text-main);
+}
+.btn-outline:hover { background: var(--glass-bg); border-color: var(--text-main); }
+
+.btn-glow {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5);
+}
+.btn-glow:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.6);
+}
+
+/* 面板底部按钮 */
+.panel-footer {
+    padding: 0 15px 15px;
+}
+.full-width { width: 100%; }
+
+/* 加载动画叠加层 */
+.loading-spinner {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(4px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.spinner {
+    width: 45px;
+    height: 45px;
+    border: 3px solid rgba(99, 102, 241, 0.2);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* 响应式微调：当屏幕高度较小时 */
+@media (max-height: 800px) {
+    .viewport { height: 300px; }
+    .input-group textarea { height: 120px; }
+}
