@@ -1,3 +1,4 @@
+require('dotenv').config({ path: require('path').resolve(__dirname, '.env') });
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
@@ -6,23 +7,31 @@ const fs = require('fs');
 const axios = require('axios');
 
 const app = express();
-app.use(cors());
+
+// CORS 配置：允许 Vercel 前端域名访问
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
+app.use(cors({ origin: ALLOWED_ORIGIN }));
 app.use(express.json());
 
-// 【配置项】图片保存目录及 API 密钥
-const IMAGE_DIR = "D:\\代码库\\AIimgpro\\相册";
+// 【配置项】使用环境变量，Railway 部署时通过 Dashboard 设置
+const IMAGE_DIR = process.env.IMAGE_DIR || '/tmp/images';
 const API_URL = "https://ark.cn-beijing.volces.com/api/v3/images/generations";
 const MODEL = "doubao-seedream-5-0-260128";
-const API_KEY = "ark-f709d1b5-b04b-4703-b250-0479f0200eaf-14d3d";
+const API_KEY = process.env.API_KEY; // 必须通过环境变量设置
+
+// 启动前检查 API_KEY
+if (!API_KEY) {
+    console.error('错误：未设置 API_KEY 环境变量');
+    process.exit(1);
+}
 
 // 确保目录存在
 if (!fs.existsSync(IMAGE_DIR)) {
     fs.mkdirSync(IMAGE_DIR, { recursive: true });
 }
 
-// 静态文件服务，允许前端访问图片
+// 静态文件服务，允许前端访问生成的图片
 app.use('/images', express.static(IMAGE_DIR));
-app.use(express.static(path.join(__dirname, '../frontend'))); // 提供前端静态页面
 
 // 1:1 还原时间戳命名规则
 function getFormattedTime() {
@@ -137,7 +146,8 @@ app.post('/api/generate', async (req, res) => {
     }
 });
 
-const PORT = 3000;
+// Railway 会通过环境变量 PORT 分配端口
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });

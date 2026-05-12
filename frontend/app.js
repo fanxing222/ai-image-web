@@ -1,3 +1,8 @@
+// 【部署配置】将此处改为你的 Railway 后端地址
+// 本地开发: 'http://localhost:3000'
+// 生产环境: 'https://your-app.up.railway.app'
+const API_BASE_URL = 'http://localhost:3000';
+
 // 核心状态
 let currentStream = null;
 let selectedImageFileName = null; // 对应 Java 中的 selectedImage 文件名
@@ -72,7 +77,7 @@ btnTakePhoto.addEventListener('click', () => {
         formData.append('image', blob, 'camera_capture.png');
 
         try {
-            const res = await fetch('/api/upload', {
+            const res = await fetch(`${API_BASE_URL}/api/upload`, {
                 method: 'POST',
                 body: formData
             });
@@ -80,8 +85,11 @@ btnTakePhoto.addEventListener('click', () => {
             if (data.success) {
                 // 设置为选中的图片文件
                 selectedImageFileName = data.fileName;
-                sourceImage.src = data.url;
+                sourceImage.src = `${API_BASE_URL}${data.url}`;
                 showLeftContent('image');
+
+                //添加日志输出，方便调试
+                console.log(`%c[上传成功] 拍照已保存至服务器: ${data.fileName}`, "color: #4CAF50; font-weight: bold;");
 
                 // 原逻辑：拍照后关闭相机
                 btnCloseCam.click();
@@ -104,15 +112,18 @@ fileInput.addEventListener('change', async (e) => {
     formData.append('image', file);
 
     try {
-        const res = await fetch('/api/upload', {
+        const res = await fetch(`${API_BASE_URL}/api/upload`, {
             method: 'POST',
             body: formData
         });
         const data = await res.json();
         if (data.success) {
             selectedImageFileName = data.fileName;
-            sourceImage.src = data.url;
+            sourceImage.src = `${API_BASE_URL}${data.url}`;
             showLeftContent('image');
+
+            //添加日志输出，方便调试
+            console.log(`%c[上传成功] 本地图片已同步至后端: ${data.fileName}`, "color: #2196F3; font-weight: bold;");
         } else {
             alert("图片上传失败：" + data.error);
         }
@@ -136,8 +147,10 @@ btnGenerate.addEventListener('click', async () => {
     loadingOverlay.style.display = 'flex';
     generatedImage.style.display = 'none';
 
+    console.log(`%c🚀 正在向后端发送生成请求... 提示词: "${prompt}"`, "color: #FF9800;");
+
     try {
-        const res = await fetch('/api/generate', {
+        const res = await fetch(`${API_BASE_URL}/api/generate`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -151,16 +164,24 @@ btnGenerate.addEventListener('click', async () => {
             throw new Error(data.error || "网络请求异常");
         }
 
-        // 显示右侧生成的图片
-        generatedImage.src = data.url;
-        generatedImage.style.display = 'block';
-        rightPlaceholder.style.display = 'none';
+       if (res.ok && !data.error) {
+                   console.log("------------------------------------------");
+                   console.log("%c✅ 豆包图像创作大模型 5.0 生成成功！", "color: #4CAF50; font-size: 14px; font-weight: bold;");
+                   console.log(`图片 URL: ${data.url}`);
+                   console.log("------------------------------------------");
 
-    } catch (err) {
-        alert("生成图片失败：" + err.message);
-    } finally {
-        // 恢复 UI 状态
-        btnGenerate.disabled = false;
-        loadingOverlay.style.display = 'none';
-    }
-});
+                   generatedImage.src = `${API_BASE_URL}${data.url}`;
+                   generatedImage.style.display = 'block';
+                   rightPlaceholder.style.display = 'none';
+               } else {
+                   throw new Error(data.error || "网络请求异常");
+               }
+
+           } catch (err) {
+               console.error("❌ 生成失败:", err.message);
+               alert("生成图片失败：" + err.message);
+           } finally {
+               btnGenerate.disabled = false;
+               loadingOverlay.style.display = 'none';
+           }
+       });

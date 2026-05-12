@@ -27,3 +27,24 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Node.js ###
+node_modules/
+
+### Environment ###
+.env
+
+### Uploads ###
+uploads/
+
+### Logs ###
+logs/
+*.log
+
+### Build ###
+dist/
+build/
+
+### Temporary ###
+tmp/
+temp/
