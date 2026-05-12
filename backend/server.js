@@ -33,6 +33,14 @@ if (!fs.existsSync(IMAGE_DIR)) {
 // 静态文件服务，允许前端访问生成的图片
 app.use('/images', express.static(IMAGE_DIR));
 
+// 【新增】托管 frontend 静态资源
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// 【新增】根路由返回 index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+});
+
 // 1:1 还原时间戳命名规则
 function getFormattedTime() {
     const d = new Date();

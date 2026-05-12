@@ -1,7 +1,6 @@
-// 【部署配置】将此处改为你的 Railway 后端地址
-// 本地开发: 'http://localhost:3000'
-// 生产环境: 'https://your-app.up.railway.app'
-const API_BASE_URL = 'http://localhost:3000';
+// 【部署配置】前后端同域部署，使用相对路径即可
+// 无需设置域名，fetch('/api/...') 自动请求当前域名
+const API_BASE_URL = '';
 
 // 核心状态
 let currentStream = null;
